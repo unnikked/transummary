@@ -24,6 +24,9 @@ bot = telebot.TeleBot(API_TOKEN)
 
 app = flask.Flask(__name__)
 
+model = pipeline('automatic-speech-recognition', model='openai/whisper-medium')
+model.save_pretrained("./model")
+
 
 # Empty webserver index, return nothing, just http 200
 @app.route('/', methods=['GET', 'HEAD'])
@@ -49,7 +52,7 @@ def webhook():
 
 
 def transcribe(sample):
-    whisper = pipeline('automatic-speech-recognition', model='openai/whisper-medium')
+    whisper = pipeline('automatic-speech-recognition', model="./model")
     return whisper(sample, generate_kwargs={"task": "transcribe", "language": "italian"}, chunk_length_s=30)
 
 
