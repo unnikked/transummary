@@ -61,9 +61,13 @@ def handle_start_help(message):
 @bot.message_handler(content_types=['audio', 'voice'])
 def transummary(message):
     try:
+        logger.info("received file")
         file_info = bot.get_file(message.voice.file_id)
+        logger.info("downloading file")
         downloaded_file = bot.download_file(file_info.file_path)
+        logger.info("transcribing")
         transcription = transcribe(downloaded_file)['text']
+        logger.info("sending transcribed text")
         bot.send_message(message.chat.id, text=transcription, reply_to_message_id=message.id)
     except:
         bot.send_message(message, text=f'Error processing this audio file.')
